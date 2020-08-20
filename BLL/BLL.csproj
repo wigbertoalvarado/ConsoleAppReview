@@ -31,9 +31,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,16 +52,69 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientInformation.cs" />
+    <Compile Include="Data\Account.cs">
+      <DependentUpon>AccountClient.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\AccountClient.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AccountClient.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\AccountClient.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AccountClient.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\AccountClient.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AccountClient.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Client.cs">
+      <DependentUpon>AccountClient.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Client_Account.cs">
+      <DependentUpon>AccountClient.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Movement.cs">
+      <DependentUpon>AccountClient.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\sysdiagram.cs">
+      <DependentUpon>AccountClient.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <EntityDeploy Include="Data\AccountClient.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>AccountClient.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Data\AccountClient.edmx.diagram">
+      <DependentUpon>AccountClient.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Model\Model.csproj">
       <Project>{c0bc7c84-e440-4ef6-9e89-1de2568ef0ac}</Project>
       <Name>Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\AccountClient.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AccountClient.Context.cs</LastGenOutput>
+      <DependentUpon>AccountClient.edmx</DependentUpon>
+    </Content>
+    <Content Include="Data\AccountClient.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>AccountClient.edmx</DependentUpon>
+      <LastGenOutput>AccountClient.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

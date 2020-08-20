@@ -7,6 +7,8 @@ using System.Configuration;
 using Model;
 using System.Data;
 using System.Data.SqlClient;
+using BLL.Data;
+using System.Data.Entity;
 
 namespace BLL
 {
@@ -19,10 +21,10 @@ namespace BLL
         public class GetClient : ClassAbstractClient 
         {
             
-            public override List<Client> GetClients()
+            public override List<Model.Client> GetClients()
             {
                 string query = "Select top 10 *  from Client";
-                List<Client> clients = new List<Client>();
+                List<Model.Client> clients = new List<Model.Client>();
 
                 SqlConnection con = new SqlConnection(connectionString);
 
@@ -37,7 +39,7 @@ namespace BLL
                         //DateTime bday;
                         //DateTime.TryParse((string)reader[5], out bday); validacion de datos sucios
 
-                        var client = new Client()
+                        var client = new Model.Client()
                         {
                             ClientId = (int)reader[0],
                             FirstName = (string)reader[1],
@@ -62,10 +64,10 @@ namespace BLL
                 return clients;
             }
         }
-        public List<Account> GetAccounts() 
+        public List<Model.Account> GetAccounts() 
         {
             string query = "select top 10 * from Account";
-            List<Account> accounts = new List<Account>();
+            List<Model.Account> accounts = new List<Model.Account>();
 
             SqlConnection con = new SqlConnection(connectionString);
 
@@ -78,7 +80,7 @@ namespace BLL
 
                 while (reader.Read())
                 {
-                    Account account = new Account() 
+                    Model.Account account = new Model.Account() 
                     {
                         AccountId = (int)reader[0],
                         AccountNumber = (string)reader[1],
@@ -150,29 +152,28 @@ namespace BLL
         }
 
         public void DisableAccounts(DateTime expirationDate) 
-        {
-            string query = "update Account set Account_State = 0 where Creation_Date < @expirationDate";
-            
-            SqlConnection con = new SqlConnection(connectionString);
+        { 
+          
             try
             {
-                con.Open();
-                SqlCommand command = new SqlCommand(query, con);
-                command.Parameters.AddWithValue("@expirationDate", expirationDate);
-                command.ExecuteNonQuery();
+                using (var context = new Account_ClientEntities()) 
+                {
+                    var accountsToUpdate = context.Accounts.Where(a => a.Creation_Date < expirationDate).ToList();
 
-                con.Close();
+                    foreach (var account in accountsToUpdate) 
+                    {
+                        account.Account_State = false;
+                    }
+
+                    context.Entry(accountsToUpdate).State = EntityState.Modified;
+                    context.SaveChanges();
+                }
+
             }
             catch (SqlException ex)
             {
                 Console.WriteLine("Error in the method DisableAccounts " + ex.Message);
             }
-            finally 
-            {
-                con.Close();
-            }
-            
-            
 
         }
 
